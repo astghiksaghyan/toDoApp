@@ -6,26 +6,26 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 export default class ToDo extends React.Component {
     static propTypes = {
+        id: PropTypes.string,
         description: PropTypes.string,
-        completed: PropTypes.bool
+        completed: PropTypes.bool,
+        onUpdate: PropTypes.func
     };
 
-    state = {
-        checked: this.props.completed
-    };
-
-    handleChange = (event) => {
-        this.setState({
-            checked: event.target.checked
-        });
+    handleChange = () => {
+        const updatedTask = { 
+            description: this.props.description,
+            completed: !this.props.completed
+        };
+        this.props.onUpdate(this.props.id, updatedTask);
     };
 
     render() {
-        const { checked } = this.state;
+        const { completed } = this.props;
         return (
             <Row>
                 <FormControlLabel
-                    checked={checked}
+                    checked={completed}
                     control={<Checkbox color={this.props.completed ? "primary" : "secondary"}/>}
                     label={this.props.description}
                     onChange={this.handleChange.bind(this)}

@@ -7,20 +7,25 @@ import ToDo from "../ToDo/ToDo";
 
 export default class ToDoList extends React.Component {
     state = {
-        tasks: [{
-            description: "Task 1",
-            completed: false
-        }, {
-            description: "Task 2",
-            completed: false
-        }, {
-            description: "Task 3",
-            completed: true
-        }],
+        tasks: [],
         value: ""
     };
 
-    getTasks = (tasks) => {
+    getTasks = () => {
+        axios.get('http://localhost:4000/todos/')
+        .then(response => {
+            this.setState({ tasks: response.data });
+        })
+        .catch(function (error){
+            console.log(error);
+        })
+    };
+
+    componentDidMount() {
+        this.getTasks();
+    }
+
+    getTasksMap = (tasks) => {
         const completed = tasks.filter((task) => {
             return task.completed;
         });
@@ -41,7 +46,7 @@ export default class ToDoList extends React.Component {
         });
     };
 
-    onSave= (event) => {
+    onSave = (event) => {
         if (event.key === 'Enter') {
             this.setState({
                 value: ""
@@ -55,15 +60,32 @@ export default class ToDoList extends React.Component {
                 this.setState({
                     value: ""
                 });
+                this.getTasks();
             });
         }
     };
 
+    onUpdate = (id, updatedTask) => {
+        axios.post('http://localhost:4000/todos/update/' + id, updatedTask)
+        .then((res) => {
+            this.getTasks();
+        });
+    };
+
     render() {
-        const tasks = this.getTasks(this.state.tasks);
+        const tasks = this.getTasksMap(this.state.tasks);
         return (
             <Container>
-                {tasks.completed.map((task, index) => <ToDo description ={task.description} key={index} id={index} completed={true}/>)}
+                {tasks.notCompleted.map((task) => {
+                        return <ToDo
+                            description={task.description}
+                            key={task.id}
+                            id={task._id}
+                            completed={task.completed}
+                            onUpdate={this.onUpdate.bind(this)}
+                        />;
+                    }
+                )}
                 <ButtonGroup
                     orientation="vertical"
                     color="primary"
@@ -79,7 +101,15 @@ export default class ToDoList extends React.Component {
                         value={this.state.value}
                     />
                 </ButtonGroup>
-                {tasks.notCompleted.map((task, index) => <ToDo description ={task.description} key={index} id={index} completed={false}/>)}
+                {tasks.completed.map((task) => {
+                    return <ToDo
+                        description={task.description}
+                        key={task.id}
+                        id={task._id}
+                        completed={task.completed}
+                        onUpdate={this.onUpdate.bind(this)}
+                    />;
+                })}
             </Container>
         );
     }
