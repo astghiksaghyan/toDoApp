@@ -1,0 +1,23 @@
+{
+    "name": "to-to",
+    "version": "0.1.0",
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "gh-pages": "^2.0.1",
+        "prettier": "^1.17.1",
+        "react-scripts": "^3.0.1"
+    },
+    "dependencies": {
+        "@material-ui/core": "^4.10.1",
+        "axios": "^0.19.2",
+        "big.js": "^5.2.2",
+        "bootstrap": "^4.5.0",
+        "github-fork-ribbon-css": "^0.2.1",
+        "react": "^16.8.6",
+        "react-bootstrap": "^1.0.1",
+        "react-dom": "^16.8.6"
+    },
+    "scripts": {
+        "start": "react-scripts start"
+    }
+}
