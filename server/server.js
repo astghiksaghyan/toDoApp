@@ -35,11 +35,11 @@ todoRoutes.route('/add').post(function(req, res) {
             res.status(200).json({'todo': 'todo added successfully'});
         })
         .catch(err => {
-            res.status(400).send('adding new todo failed');
+            res.status(500).send('adding new todo failed');
         });
 });
 
-todoRoutes.route('/update/:id').post(function(req, res) {
+todoRoutes.route('/update/:id').put(function(req, res) {
     Todo.findById(req.params.id, function(err, todo) {
         if (!todo)
             res.status(404).send("data is not found");

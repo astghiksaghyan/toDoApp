@@ -1,4 +1,4 @@
-# toDoApp
+# Description
 
 This application is used to create todos.
 You can creat todos.
@@ -11,3 +11,11 @@ $ mongod
 
 $ mongo
 $ use todos
+
+# Start mongod
+
+$ sudo service mongod start
+
+# Run server
+cd server
+$ nodemon server
