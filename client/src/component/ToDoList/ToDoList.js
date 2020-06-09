@@ -2,13 +2,20 @@ import React from "react";
 import axios from "axios";
 import { Container } from 'react-bootstrap';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import TextField from '@material-ui/core/TextField';
 import ToDo from "../ToDo/ToDo";
 
 export default class ToDoList extends React.Component {
     state = {
         tasks: [],
-        value: ""
+        value: "",
+        open: false
     };
 
     getTasks = () => {
@@ -72,7 +79,15 @@ export default class ToDoList extends React.Component {
         });
     };
 
+    handleCollapseClick = () => {
+        const { open } = this.state;
+        this.setState({
+            open: !open
+        });
+    };
+
     render() {
+        const { open } = this.state;
         const tasks = this.getTasksMap(this.state.tasks);
         return (
             <Container>
@@ -101,15 +116,26 @@ export default class ToDoList extends React.Component {
                         value={this.state.value}
                     />
                 </ButtonGroup>
-                {tasks.completed.map((task) => {
-                    return <ToDo
-                        description={task.description}
-                        key={task.id}
-                        id={task._id}
-                        completed={task.completed}
-                        onUpdate={this.onUpdate.bind(this)}
-                    />;
-                })}
+                <List
+                    component="nav"
+                    aria-labelledby="nested-list-subheader"
+                >
+                    <ListItem button onClick={this.handleCollapseClick.bind(this)}>
+                        <ListItemText primary={`${tasks.completed.length} Completed items`} />
+                            {open ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+                        {tasks.completed.map((task) => {
+                            return <ToDo
+                                description={task.description}
+                                key={task.id}
+                                id={task._id}
+                                completed={task.completed}
+                                onUpdate={this.onUpdate.bind(this)}
+                            />;
+                        })}
+                    </Collapse>
+                </List>
             </Container>
         );
     }
